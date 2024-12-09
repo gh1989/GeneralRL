@@ -1,5 +1,6 @@
 #include "agent.h"
 #include "environment.h"
+#include "tictactoe_game.h" // Specific game implementation
 #include <torch/torch.h>
 #include <iostream>
 #include <fstream>
@@ -25,7 +26,7 @@ int humanPlayer(const std::vector<int>& validActions) {
     return action;
 }
 
-int main() {
+int _main() {
     // Initialize device
     torch::Device device(torch::cuda::is_available() ? torch::kCUDA : torch::kCPU);
     std::cout << "Using device: " << (torch::cuda::is_available() ? "GPU" : "CPU") << "\n";
@@ -43,8 +44,10 @@ int main() {
         return 1;
     }
 
-    // Initialize environment
-    Environment env;
+    // Create the game instance (Tic-Tac-Toe in this case)
+    auto game = std::make_shared<TicTacToeGame>();
+    Environment env(game);
+
     bool done = false;
     auto state = env.reset();
 

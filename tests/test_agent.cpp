@@ -1,12 +1,13 @@
 #include "agent.h"
 #include "environment.h"
+#include "tictactoe_game.h"
 #include <cassert>
 
 void testAgent() {
     torch::Device device(torch::kCPU);
     Agent agent(device);
-
-    Environment env;
+    auto game = std::make_shared<TicTacToeGame>();
+    Environment env(game);
     std::vector<float> state = env.reset();
     std::vector<int> validActions = env.getValidActions();
 

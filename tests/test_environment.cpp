@@ -1,9 +1,11 @@
 #include "environment.h"
+#include "tictactoe_game.h"
 #include <iostream>
 #include <cassert>
 
 void testEnvironment() {
-    Environment env;
+    auto game = std::make_shared<TicTacToeGame>();
+    Environment env(game);
 
     // Reset environment
     std::vector<float> initialState = env.reset();

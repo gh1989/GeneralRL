@@ -3,12 +3,13 @@
 #include <stdexcept>
 #include <iostream>
 
-Environment::Environment() : game() {
+Environment::Environment(std::shared_ptr<GameFacade> game)
+    : game(std::move(game)) {
     reset();
 }
 
 std::vector<float> Environment::reset() {
-    game.reset();
+    game->reset();
     done = false;
     return getState();
 }
@@ -23,60 +24,34 @@ std::tuple<std::vector<float>, float, bool> Environment::step(int action) {
     }
 
     // Apply the action
-    bool moveSuccessful = game.makeMove(action);
-    if (!moveSuccessful) {
+    if (!game->makeMove(action)) {
         throw std::runtime_error("Failed to apply the action.");
     }
 
-    // Check for winner or draw
-    auto winner = game.checkWinner();
+    // Check for game over and determine reward
+    done = game->isGameOver();
     float reward = 0.0;
 
-    if (winner) {
-        done = true;
-        if (*winner == 'X') {
-            reward = game.getCurrentPlayer() == 'X' ? 1.0f : -1.0f;
-        } else if (*winner == 'O') {
-            reward = game.getCurrentPlayer() == 'O' ? 1.0f : -1.0f;
-        } else if (*winner == 'D') {
+    if (done) {
+        char winner = game->getWinner();
+        if (winner == 'X') {
+            reward = 1.0f; // Agent wins
+        } else if (winner == 'O') {
+            reward = -1.0f; // Opponent wins
+        } else if (winner == 'D') {
             reward = 0.0f; // Draw
         }
-    } else {
-        // Switch player for next turn
-        game.switchPlayer();
     }
 
     return {getState(), reward, done};
 }
 
 std::vector<float> Environment::getState() const {
-    std::vector<float> state(9);
-    const auto& board = game.getBoard();
-
-    for (size_t i = 0; i < board.size(); ++i) {
-        if (board[i] == 'X') {
-            state[i] = 1.0f; // 'X' is represented as 1
-        } else if (board[i] == 'O') {
-            state[i] = -1.0f; // 'O' is represented as -1
-        } else {
-            state[i] = 0.0f; // Empty spaces are 0
-        }
-    }
-
-    return state;
+    return game->getBoardState();
 }
 
 std::vector<int> Environment::getValidActions() const {
-    std::vector<int> validActions;
-    const auto& board = game.getBoard();
-
-    for (size_t i = 0; i < board.size(); ++i) {
-        if (board[i] == ' ') {
-            validActions.push_back(static_cast<int>(i));
-        }
-    }
-
-    return validActions;
+    return game->getValidActions();
 }
 
 bool Environment::isValidAction(int action) const {
@@ -85,5 +60,5 @@ bool Environment::isValidAction(int action) const {
 }
 
 void Environment::printState() const {
-    game.printBoard();
+    game->printBoard();
 }

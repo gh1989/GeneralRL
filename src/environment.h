@@ -1,14 +1,16 @@
 #ifndef ENVIRONMENT_H
 #define ENVIRONMENT_H
 
-#include "game.h"
+#include "game_facade.h"
 #include <vector>
 #include <tuple>
 #include <torch/torch.h>
+#include <memory>
 
 class Environment {
 public:
-    Environment();
+    explicit Environment(std::shared_ptr<GameFacade> game);
+
     std::vector<float> reset();
     std::tuple<std::vector<float>, float, bool> step(int action);
     std::vector<float> getState() const;
@@ -16,8 +18,8 @@ public:
     void printState() const;
 
 private:
-    TicTacToe game;  
-    bool done = false; 
+    std::shared_ptr<GameFacade> game;  // Use GameFacade for flexibility
+    bool done = false;
     bool isValidAction(int action) const;
 };
 
