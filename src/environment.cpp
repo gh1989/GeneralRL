@@ -20,14 +20,7 @@ std::tuple<std::vector<float>, float, bool> Environment::step(int action) {
     float reward = 0.0;
 
     if (done) {
-        char winner = game->getWinner();
-        if (winner == 'X') {
-            reward = 1.0f; // Agent wins
-        } else if (winner == 'O') {
-            reward = -1.0f; // Opponent wins
-        } else if (winner == 'D') {
-            reward = 0.0f; // Draw
-        }
+        reward = game->getWinner();
     }
 
     if (!isValidAction(action) && !done) {
@@ -53,7 +46,6 @@ std::vector<int> Environment::getValidActions() const {
 
 bool Environment::isValidAction(int action) const {
     const auto& validActions = getValidActions();
-    std::cout << "isValidAction happening.." << std::endl;
     return std::find(validActions.begin(), validActions.end(), action) != validActions.end();
 }
 

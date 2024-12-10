@@ -11,6 +11,7 @@ void CheckersGame::reset() {
     currentPlayer = 1;   // Player 1 starts
     gameOver = false;
     winner = ' ';
+    movesSinceCapture = 0;
     initializeBoard();
 }
 
@@ -36,7 +37,6 @@ void CheckersGame::initializeBoard() {
 
 
 bool CheckersGame::makeMove(int action) {
-    std::cout << action << std::endl;
     if (isGameOver()) {
         return false;
     }
@@ -49,8 +49,6 @@ bool CheckersGame::makeMove(int action) {
 }
 
 bool CheckersGame::isGameOver() const {
-    if (gameOver)
-        std::cout << "Game over!" << std::endl;
     return gameOver;
 }
 
@@ -299,7 +297,9 @@ void CheckersGame::applyMove(int action) {
 
     // Check for captures (if the move jumps over an opponent's piece)
     int middle = (start + end) / 2;
-    if (std::abs(start - end) == 18 || std::abs(start - end) == 14) { // Capture move
+    if (std::abs(start - end) == 18 || std::abs(start - end) == 14) 
+    { // Capture move
+        movesSinceCapture = 0;
         if (board[middle] == 0 || (board[middle] > 0 && currentPlayer == 1) || (board[middle] < 0 && currentPlayer == -1)) {
             throw std::invalid_argument("Invalid action: No valid capture.");
         }
@@ -307,6 +307,8 @@ void CheckersGame::applyMove(int action) {
         // Remove the captured piece
         board[middle] = 0;
     }
+    else
+        movesSinceCapture++;
 
     // Move the piece
     board[end] = piece;
@@ -317,7 +319,7 @@ void CheckersGame::applyMove(int action) {
         board[end] = (currentPlayer == 1) ? 2 : -2; // Promote to king
     }
 
-    this->printBoard();
+    //this->printBoard();
     this->checkGameOver();
 }
 
@@ -337,19 +339,25 @@ void CheckersGame::checkGameOver() {
     // Check if either player has no pieces
     if (player1Pieces == 0) {
         gameOver = true;
-        winner = 'O'; // Player 2 wins
+        winner = 1; // Player 1 wins
         return;
     }
     if (player2Pieces == 0) {
         gameOver = true;
-        winner = 'X'; // Player 1 wins
+        winner = -1; // Player 2 wins
         return;
     }
 
     // Check if either player has no valid moves
     auto player1Moves = generateMoves(); // Assuming currentPlayer is set
     gameOver = player1Moves.empty();
-    winner = currentPlayer == 1 ? 'O' : 'X';
+    if(gameOver)
+        winner = currentPlayer;
+    if(movesSinceCapture >= 40)
+    {
+        gameOver = true;
+        winner = 0;
+    }
 }
 
 void CheckersGame::setBoardState(const std::vector<int>& newBoard) {

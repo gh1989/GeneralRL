@@ -15,12 +15,13 @@ void Trainer::train(int episodes) {
 
         while (!done) {
             auto validActions = env.getValidActions();
-            std::cout << "The valid actions:" << std::endl;
+            /*
             for(auto validAction : validActions)
-                std::cout << validAction;
-            std::cout << std::endl << "chooseAction..." << std::endl;
+                std::cout << validAction << "..";
+            */
+            if(validActions.empty()) // Horrendous bug.
+                break;
             int action = agent.chooseAction(state, validActions, true);
-            std::cout << "Action: " << action << std::endl;
             auto [nextState, reward, gameDone] = env.step(action);
             state = nextState;
             done = gameDone;
@@ -32,12 +33,12 @@ void Trainer::train(int episodes) {
         else if (totalReward < 0) losses++;
         else draws++;
 
-        // Log every 100 episodes
-        if (episode % 100 == 0) {
-            std::cout << "Episodes: " << episode
-                      << ", Wins: " << wins
-                      << ", Losses: " << losses
-                      << ", Draws: " << draws << "\n";
+        // Log every 10 episodes
+        if (episode % 10 == 0) {
+            std::cout << "Episodes: "   << episode
+                      << ", Wins: "     << wins
+                      << ", Losses: "   << losses
+                      << ", Draws: "    << draws << "\n";
         }
     }
 

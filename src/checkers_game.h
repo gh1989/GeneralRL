@@ -23,8 +23,8 @@ private:
     std::vector<int> board; // 1D representation of 8x8 board
     int currentPlayer;      // 1 for Player 1, -1 for Player 2
     bool gameOver;
-    char winner;
-
+    int winner;
+    int movesSinceCapture=0;
     void initializeBoard();
     void checkGameOver();
 };
