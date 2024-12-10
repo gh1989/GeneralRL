@@ -34,7 +34,7 @@ void Trainer::train(int episodes) {
         else draws++;
 
         // Log every 10 episodes
-        if (episode % 10 == 0) {
+        if (episode % 100 == 0) {
             std::cout << "Episodes: "   << episode
                       << ", Wins: "     << wins
                       << ", Losses: "   << losses

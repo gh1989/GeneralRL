@@ -13,11 +13,11 @@ int main() {
 
     // Training configuration
     int numEpisodes = 100000;       // Number of training episodes
-    float initialEpsilon = 1.0;     // Initial exploration rate
+    float initialEpsilon = 0.25;     // Initial exploration rate
     float epsilonDecay = 0.99;      // Decay rate for exploration
     float minEpsilon = 0.01;        // Minimum exploration rate
-    float learningRate = 1e-2;      // Learning rate for optimizer
-    std::string modelPath = "checkers_model_2.pt";
+    float learningRate = 1e-3;      // Learning rate for optimizer
+    std::string modelPath = "checkers_model.pt";
 
     // Create the game instance (Checkers in this case)
     auto game = std::make_shared<CheckersGame>();

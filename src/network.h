@@ -9,6 +9,9 @@ struct GeneralGameNet : torch::nn::Module {
         // Define layers dynamically based on input and action sizes
         fc1 = register_module("fc1", torch::nn::Linear(inputSize, 64));
         fc2 = register_module("fc2", torch::nn::Linear(64, 64));
+        fc3 = register_module("fc3", torch::nn::Linear(64, 64)); // Third hidden layer
+        fc4 = register_module("fc4", torch::nn::Linear(64, 64)); // Fourth hidden layer
+
         policyHead = register_module("policyHead", torch::nn::Linear(64, actionSize)); // Action size
         valueHead = register_module("valueHead", torch::nn::Linear(64, 1));           // Scalar value
 
@@ -20,6 +23,8 @@ struct GeneralGameNet : torch::nn::Module {
         x = x.to(device); // Ensure input tensor is on the correct device
         x = torch::relu(fc1->forward(x));
         x = torch::relu(fc2->forward(x));
+        x = torch::relu(fc3->forward(x));
+        x = torch::relu(fc4->forward(x));
         auto policy = torch::softmax(policyHead->forward(x), 1);
         auto value = torch::tanh(valueHead->forward(x));
         return std::make_tuple(policy, value);
@@ -29,7 +34,7 @@ private:
     torch::Device device;        // Store the device
     int inputSize;               // Input size (e.g., 9 for Tic-Tac-Toe, 64 for Checkers)
     int actionSize;              // Number of possible actions
-    torch::nn::Linear fc1{nullptr}, fc2{nullptr}, policyHead{nullptr}, valueHead{nullptr};
+    torch::nn::Linear fc1{nullptr}, fc2{nullptr}, fc3{nullptr}, fc4{nullptr}, policyHead{nullptr}, valueHead{nullptr};
 };
 
 #endif
