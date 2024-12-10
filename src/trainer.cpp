@@ -15,6 +15,7 @@ void Trainer::train(int episodes) {
 
         while (!done) {
             int action = agent.chooseAction(state, env.getValidActions(), true);
+            std::cout << "action applying..." << std::endl;
             auto [nextState, reward, gameDone] = env.step(action);
             state = nextState;
             done = gameDone;

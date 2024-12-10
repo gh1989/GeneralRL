@@ -3,15 +3,17 @@
 #include <random>
 #include <iostream>
 
-Agent::Agent(torch::Device device, float learningRate) : device(device) {
-    // Initialize the neural network
-    policyNetwork = std::make_shared<TicTacToeNet>(device);
+Agent::Agent(torch::Device device, int inputSize, int actionSize, float learningRate)
+    : device(device) {
+    // Initialize the neural network with game-specific dimensions
+    policyNetwork = std::make_shared<GeneralGameNet>(device, inputSize, actionSize);
     policyNetwork->to(device);
 
     // Set optimizer with configurable learning rate
-    optimizer = std::make_unique<torch::optim::Adam>(policyNetwork->parameters(), torch::optim::AdamOptions(learningRate));
+    optimizer = std::make_unique<torch::optim::Adam>(
+        policyNetwork->parameters(), torch::optim::AdamOptions(learningRate));
 
-    // Initialize exploration parameters (can be set separately via setEpsilon)
+    // Initialize exploration parameters
     epsilon = 1.0;
     epsilonDecay = 0.99;
     minEpsilon = 0.1;

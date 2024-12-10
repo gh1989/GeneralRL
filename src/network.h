@@ -3,13 +3,14 @@
 
 #include <torch/torch.h>
 
-struct TicTacToeNet : torch::nn::Module {
-    explicit TicTacToeNet(torch::Device device) : device(device) {
-        // Define layers
-        fc1 = register_module("fc1", torch::nn::Linear(9, 64));
+struct GeneralGameNet : torch::nn::Module {
+    explicit GeneralGameNet(torch::Device device, int inputSize, int actionSize)
+        : device(device), inputSize(inputSize), actionSize(actionSize) {
+        // Define layers dynamically based on input and action sizes
+        fc1 = register_module("fc1", torch::nn::Linear(inputSize, 64));
         fc2 = register_module("fc2", torch::nn::Linear(64, 64));
-        policyHead = register_module("policyHead", torch::nn::Linear(64, 9)); // 9 actions
-        valueHead = register_module("valueHead", torch::nn::Linear(64, 1));  // 1 scalar value
+        policyHead = register_module("policyHead", torch::nn::Linear(64, actionSize)); // Action size
+        valueHead = register_module("valueHead", torch::nn::Linear(64, 1));           // Scalar value
 
         // Move the model to the specified device
         this->to(device);
@@ -25,7 +26,9 @@ struct TicTacToeNet : torch::nn::Module {
     }
 
 private:
-    torch::Device device; // Store the device
+    torch::Device device;        // Store the device
+    int inputSize;               // Input size (e.g., 9 for Tic-Tac-Toe, 64 for Checkers)
+    int actionSize;              // Number of possible actions
     torch::nn::Linear fc1{nullptr}, fc2{nullptr}, policyHead{nullptr}, valueHead{nullptr};
 };
 

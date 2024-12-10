@@ -15,19 +15,6 @@ std::vector<float> Environment::reset() {
 }
 
 std::tuple<std::vector<float>, float, bool> Environment::step(int action) {
-    if (done) {
-        throw std::runtime_error("Cannot take actions in a finished game. Call reset() to start a new game.");
-    }
-
-    if (!isValidAction(action)) {
-        throw std::invalid_argument("Invalid action.");
-    }
-
-    // Apply the action
-    if (!game->makeMove(action)) {
-        throw std::runtime_error("Failed to apply the action.");
-    }
-
     // Check for game over and determine reward
     done = game->isGameOver();
     float reward = 0.0;
@@ -43,6 +30,16 @@ std::tuple<std::vector<float>, float, bool> Environment::step(int action) {
         }
     }
 
+    if (!isValidAction(action) && !done) {
+        throw std::invalid_argument("Invalid action.");
+    }
+
+    // Apply the action
+    if(!done)
+    if (!game->makeMove(action)) {
+        throw std::runtime_error("Failed to apply the action.");
+    }
+
     return {getState(), reward, done};
 }
 
@@ -56,6 +53,7 @@ std::vector<int> Environment::getValidActions() const {
 
 bool Environment::isValidAction(int action) const {
     const auto& validActions = getValidActions();
+    std::cout << "isValidAction happening.." << std::endl;
     return std::find(validActions.begin(), validActions.end(), action) != validActions.end();
 }
 

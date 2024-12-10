@@ -33,7 +33,7 @@ int _main() {
 
     // Load the trained model
     std::string modelPath = "tictactoe_model.pt";
-    Agent agent(device);
+    Agent agent(device, 9, 9);
 
     std::ifstream modelFile(modelPath);
     if (modelFile.good()) {

@@ -14,7 +14,7 @@ struct Transition {
 
 class Agent {
 public:
-    Agent(torch::Device device, float learningRate = 1e-3);
+    Agent(torch::Device device, int inputSize, int actionSize, float learningRate = 1e-3);
 
     // Select an action based on the state and valid actions
     int chooseAction(const std::vector<float>& state, const std::vector<int>& validActions, bool explore = true);
@@ -30,7 +30,7 @@ public:
     void loadModel(const std::string& path);
 
 private:
-    std::shared_ptr<TicTacToeNet> policyNetwork; // Neural network
+    std::shared_ptr<GeneralGameNet> policyNetwork; // Neural network
     std::unique_ptr<torch::optim::Adam> optimizer; // Optimizer
     torch::Device device;
 

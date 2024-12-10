@@ -8,7 +8,7 @@ void testTrainer() {
     torch::Device device(torch::kCPU);
     auto game = std::make_shared<TicTacToeGame>();
     Environment env(game);
-    Agent agent(device);
+    Agent agent(device,9,9);
 
     Trainer trainer(env, agent);
 
