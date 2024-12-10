@@ -348,18 +348,8 @@ void CheckersGame::checkGameOver() {
 
     // Check if either player has no valid moves
     auto player1Moves = generateMoves(); // Assuming currentPlayer is set
-    std::cout << "check game over " << player1Moves.size() << std::endl;
-    std::cout << "just generated moves" << std::endl;
-    if (currentPlayer == 1 && player1Moves.empty()) {
-        gameOver = true;
-        winner = 'O'; // Player 2 wins
-        return;
-    }
-    if (currentPlayer == -1 && player1Moves.empty()) {
-        gameOver = true;
-        winner = 'X'; // Player 1 wins
-        return;
-    }
+    gameOver = player1Moves.empty();
+    winner = currentPlayer == 1 ? 'O' : 'X';
 }
 
 void CheckersGame::setBoardState(const std::vector<int>& newBoard) {

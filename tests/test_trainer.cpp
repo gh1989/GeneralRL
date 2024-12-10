@@ -1,14 +1,14 @@
 #include "trainer.h"
 #include "environment.h"
 #include "agent.h"
-#include "tictactoe_game.h"
+#include "checkers_game.h"
 #include <cassert>
 
 void testTrainer() {
     torch::Device device(torch::kCPU);
-    auto game = std::make_shared<TicTacToeGame>();
+    auto game = std::make_shared<CheckersGame>();
     Environment env(game);
-    Agent agent(device,9,9);
+    Agent agent(device,64,4096);
 
     Trainer trainer(env, agent);
 

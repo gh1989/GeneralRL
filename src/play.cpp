@@ -1,6 +1,6 @@
 #include "agent.h"
 #include "environment.h"
-#include "tictactoe_game.h" // Specific game implementation
+#include "checkers_game.h" // Specific game implementation
 #include <torch/torch.h>
 #include <iostream>
 #include <fstream>
@@ -32,8 +32,8 @@ int _main() {
     std::cout << "Using device: " << (torch::cuda::is_available() ? "GPU" : "CPU") << "\n";
 
     // Load the trained model
-    std::string modelPath = "tictactoe_model.pt";
-    Agent agent(device, 9, 9);
+    std::string modelPath = "checkers_model_2.pt";
+    Agent agent(device, 64, 4096);
 
     std::ifstream modelFile(modelPath);
     if (modelFile.good()) {
@@ -45,7 +45,7 @@ int _main() {
     }
 
     // Create the game instance (Tic-Tac-Toe in this case)
-    auto game = std::make_shared<TicTacToeGame>();
+    auto game = std::make_shared<CheckersGame>();
     Environment env(game);
 
     bool done = false;

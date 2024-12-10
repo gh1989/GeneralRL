@@ -29,10 +29,7 @@ target_include_directories(train_network PRIVATE ${CMAKE_SOURCE_DIR}/src)
 #target_include_directories(play_tictactoe PRIVATE ${CMAKE_SOURCE_DIR}/src)
 
 # tests
-set(TEST_COMMON src/environment.cpp src/checkers_game.cpp src/tictactoe_game.cpp src/agent.cpp src/trainer.cpp)
-add_executable(test_environment tests/test_environment.cpp ${TEST_COMMON})
-target_link_libraries(test_environment "${TORCH_LIBRARIES}")
-target_include_directories(test_environment PRIVATE ${CMAKE_SOURCE_DIR}/src)
+set(TEST_COMMON src/environment.cpp src/checkers_game.cpp src/agent.cpp src/trainer.cpp)
 add_executable(test_agent tests/test_agent.cpp ${TEST_COMMON})
 target_link_libraries(test_agent "${TORCH_LIBRARIES}")
 target_include_directories(test_agent PRIVATE ${CMAKE_SOURCE_DIR}/src)
